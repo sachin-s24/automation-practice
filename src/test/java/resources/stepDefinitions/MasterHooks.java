@@ -1,14 +1,16 @@
 package resources.stepDefinitions;
 
+
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import resources.BasePage;
+import resources.pageObjects.BasePage;
+
 
 
 public class MasterHooks extends BasePage {
 
     @Before
-    public void setup() {
+    public void setup()  {
         driver = initializeDriver();
         driver.manage().window().maximize();
     }
