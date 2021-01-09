@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 
 @CucumberOptions(
         features = "src/test/java/resources/features",
-        glue = "resources.stepDefinitions",
+        glue = "stepDefinitions",
         monochrome = true )
 
 public class MainRunner {

@@ -15,10 +15,11 @@ import java.util.Date;
 
 public class BasePage {
 
+
     public static WebDriver driver;
     private WebDriverWait wait;
     private JavascriptExecutor jsExecutor;
-    private static String screenshotName ;
+    private static String screenshotName;
 
 
     public static WebDriver initializeDriver() {
@@ -47,10 +48,79 @@ public class BasePage {
         }
     }
 
+    public void waitAndclickElementUsingJS(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        this.wait = new WebDriverWait(driver, 10);
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(element));
+            js.executeScript("arguments[0].click();", element);
+            System.out.println("Successfully JS clicked on the following WebElement: " + "<" + element.toString() + ">");
+        } catch (StaleElementReferenceException elementUpdated) {
+            WebElement staleElement = element;
+            Boolean elementPresent = wait.until(ExpectedConditions.elementToBeClickable(staleElement)).isEnabled();
+            if (elementPresent == true) {
+                js.executeScript("arguments[0].click();", elementPresent);
+                System.out.println("(Stale Exception) Successfully JS clicked on the following WebElement: " + "<" + element.toString() + ">");
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println("Unable to JS click on the following WebElement: " + "<" + element.toString() + ">");
+            Assert.fail("Unable to JS click on the WebElement, Exception: " + e.getMessage());
+        }
+    }
+
+    public void moveToElement(WebElement element) {
+        Actions actions = new Actions(driver);
+        try {
+            actions.moveToElement(element).build().perform();
+        } catch (Exception e) {
+            System.out.println("Unable to move to the WebElement, using locator: " + "<" + element.toString() + ">");
+            Assert.fail("Unable to move to the WebElement, Exception: " + e.getMessage());
+        }
+    }
+
+    public void verifyElementIsDisplayed(WebElement element) {
+        this.wait = new WebDriverWait(driver, 10);
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(element));
+            if (!element.isDisplayed()) {
+                System.out.println("Element is not displayed.");
+            }
+            Assert.assertTrue(element.isDisplayed());
+        } catch (Exception e) {
+            System.out.println("Unable to locate WebElement, using locator: " + "<" + element.toString() + ">");
+            Assert.fail("Unable to locate the WebElement, Exception: " + e.getMessage());
+        }
+
+    }
+
+
+    public void verifyElementIsNotDisplayed(WebElement element) {
+        try {
+            if (element.isDisplayed()) {
+                System.out.println("Element should not have been displayed but it was!");
+            }
+            Assert.assertFalse(element.isDisplayed());
+        } catch (Exception e) {
+        }
+
+    }
+
+    public void scrollToElementByWebElementLocator(WebElement element) {
+        try {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+            //((JavascriptExecutor) driver).executeScript("window.scrollBy(0, -400)");
+            System.out.println("Succesfully scrolled to the WebElement, using locator: " + "<" + element.toString() + ">");
+        } catch (Exception e) {
+            System.out.println("Unable to scroll to the WebElement, using locator: " + "<" + element.toString() + ">");
+            Assert.fail("Unable to scroll to the WebElement, Exception: " + e.getMessage());
+        }
+    }
+
     public void actionMoveAndClick(WebElement element) throws Exception {
         Actions ob = new Actions(driver);
+        this.wait = new WebDriverWait(driver, 10);
         try {
-            this.wait.until(ExpectedConditions.elementToBeClickable(element)).isEnabled();
+            //this.wait.until(ExpectedConditions.elementToBeClickable(element)).isEnabled();
             ob.moveToElement(element).click().build().perform();
             System.out.println("Successfully Action Moved and Clicked on the WebElement, using locator: " + "<" + element.toString() + ">");
         } catch (StaleElementReferenceException elementUpdated) {
@@ -142,7 +212,6 @@ public class BasePage {
     }
 
 
-
     /**********************************************************************************
      **EXTENT REPORT
      **********************************************************************************/
@@ -154,12 +223,12 @@ public class BasePage {
     }
 
     public static void captureScreenshot() throws IOException, InterruptedException {
-        File srcFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         screenshotName = returnDateStamp(".jpg");
         FileUtils.copyFile(srcFile, new File(System.getProperty("user.dir") + "\\output\\imgs\\" + screenshotName));
         Reporter.addStepLog("Taking a screenshot!");
         Reporter.addStepLog("<br>");
-        Reporter.addStepLog("<a target=\"_blank\", href="+ returnScreenshotName() + "><img src="+ returnScreenshotName()+ " height=200 width=300></img></a>");
+        Reporter.addStepLog("<a target=\"_blank\", href=" + returnScreenshotName() + "><img src=" + returnScreenshotName() + " height=200 width=300></img></a>");
     }
 
     public static String returnScreenshotName() {
@@ -175,7 +244,7 @@ public class BasePage {
             os = new FileOutputStream(dest);
             byte[] buffer = new byte[1024];
             int length;
-            while((length = is.read(buffer)) > 0) {
+            while ((length = is.read(buffer)) > 0) {
                 os.write(buffer, 0, length);
             }
 
@@ -192,6 +261,8 @@ public class BasePage {
         File dest = new File(System.getProperty("user.dir") + "\\output\\" + date.toString() + ".html");
         copyFileUsingStream(source, dest);
     }
+
+
 }
 
 

@@ -9,16 +9,16 @@ import resources.pageObjects.BasePage;
 
 public class MasterHooks extends BasePage {
 
-    @Before
+    @Before("@Start")
     public void setup()  {
         driver = initializeDriver();
         driver.manage().window().maximize();
     }
 
-    @After
+    @After("@End")
     public void teardown() {
         driver.manage().deleteAllCookies();
-        driver.quit();
+        driver.close();
         driver = null;
     }
 }
