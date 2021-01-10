@@ -1,4 +1,4 @@
-Feature: Delete The Item From Basket Page
+Feature: User Can Delete The Item From Basket Page
 
   @Start
   Scenario: Add Item To Cart

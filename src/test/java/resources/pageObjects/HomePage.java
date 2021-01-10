@@ -28,7 +28,11 @@ public class HomePage extends BasePage {
     public @FindBy(xpath = "//div[@class='product-name']")
     WebElement cartItemName;
 
-//    public By btnAddToCart1 = By.xpath("//body/div[@id='page']/div[2]/div[1]/div[2]/div[1]/div[1]/ul[1]/li[1]/div[1]/div[2]/div[2]/a[1]/span[1]");
+    public @FindBy (xpath = "//a[@class='sf-with-ul'][normalize-space()='Women']")
+    WebElement btnWomen ;
+
+    public @FindBy (xpath = "//li[@class='sfHover']//a[@title='Summer Dresses'][normalize-space()='Summer Dresses']")
+    WebElement linkSummerDresses;
 
 
     public void addItemToCart() throws Throwable {
@@ -44,6 +48,14 @@ public class HomePage extends BasePage {
     public void validateItemInCartDropdown() throws Throwable{
         moveToElement(dropdownViewShoppingCart);
         verifyElementIsDisplayed(cartItemName);
+    }
+
+    public void hoverOverWomenButton() {
+        moveToElement(btnWomen);
+    }
+
+    public void validateSummerDressesOption() {
+        verifyElementIsDisplayed(linkSummerDresses);
     }
 
 

@@ -2,6 +2,7 @@ package resources.stepDefinitions;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import resources.pageObjects.HomePage;
 import static resources.utils.Constant.*;
@@ -32,4 +33,19 @@ public class HomePageSteps {
         homePage.validateItemInCartDropdown();
     }
 
+    @When("^I hover over the women button$")
+    public void i_hover_over_the_women_button() throws Throwable {
+        homePage.hoverOverWomenButton();
+
+    }
+
+    @Then("^The summer dresses navigation option should appear$")
+    public void the_summer_dresses_navigation_option_should_appear() throws Throwable {
+        homePage.validateSummerDressesOption();
+    }
+
+    @When("^I click on the summer dresses navigation option$")
+    public void i_click_on_the_summer_dresses_navigation_option() throws Throwable {
+        homePage.linkSummerDresses.click();
+    }
 }

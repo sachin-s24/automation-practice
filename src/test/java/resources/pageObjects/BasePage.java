@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.*;
 import java.util.Date;
+import java.util.List;
 
 public class BasePage {
 
@@ -47,6 +48,21 @@ public class BasePage {
             attempts++;
         }
     }
+
+    public void waitUntilElementDisappared(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        this.wait = new WebDriverWait(driver, 60);
+        try {
+            this.wait.until(ExpectedConditions.invisibilityOf(element));
+            System.out.println("Element disappeared: " + "<" + element.toString() + ">");
+
+        } catch (Exception e) {
+            System.out.println("Element did not disappear, Exception: " + e.getMessage());
+            Assert.fail("Element is visible, using locator: " + "<" + element.toString() + ">");
+        }
+    }
+
+
 
     public void waitAndclickElementUsingJS(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -152,6 +168,15 @@ public class BasePage {
         }
     }
 
+    public void sendLeftArrowKey() {
+        Actions actions = new Actions(driver);
+        try {
+            actions.sendKeys(Keys.chord(Keys.ARROW_LEFT)).build().perform();
+        }
+        catch (Exception e) {
+            Assert.fail("Unable to send Left Arrow key, Exception: " + e.getMessage());
+        }
+    }
 
     /**********************************************************************************
      **WAIT METHODS
@@ -209,6 +234,24 @@ public class BasePage {
             System.out.println("File does not exist.");
         }
         Assert.assertTrue(file.exists() && !file.isDirectory());
+    }
+
+    public void verifyExpectedPriceRangeOfItemsOnPage(By element,  int minimumPrice , int maximumPrice) {
+
+        List<WebElement> elements = driver.findElements(element);
+
+        for (int i = 0; i < elements.size(); i++) {
+            String stringPrice = elements.get(i).getText().substring(1, 3);
+            int integerPrice = Integer.parseInt(stringPrice);
+            if (integerPrice <= maximumPrice) {
+                if (integerPrice >= minimumPrice) {
+                    Assert.assertTrue("Item price '" + stringPrice + "'is within the specified range of '" + minimumPrice + "' and '" + maximumPrice + "'", true);
+                }
+            } else {
+                System.out.println("Item Prices were not updated correctly.");
+                Assert.fail();
+            }
+        }
     }
 
 
