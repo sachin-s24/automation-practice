@@ -8,11 +8,13 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.*;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class BasePage {
 
@@ -23,7 +25,7 @@ public class BasePage {
     private static String screenshotName;
 
 
-    public static WebDriver initializeDriver() {
+    public  WebDriver initializeDriver() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         return driver;
@@ -34,6 +36,7 @@ public class BasePage {
      **CLICK METHODS
      **********************************************************************************/
     public void waitAndClickElement(WebElement element) {
+        this.wait = new WebDriverWait(driver, 10);
         boolean clicked = false;
         int attempts = 0;
         while (!clicked && attempts < 10) {
@@ -50,7 +53,6 @@ public class BasePage {
     }
 
     public void waitUntilElementDisappared(WebElement element) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
         this.wait = new WebDriverWait(driver, 60);
         try {
             this.wait.until(ExpectedConditions.invisibilityOf(element));
@@ -68,7 +70,7 @@ public class BasePage {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         this.wait = new WebDriverWait(driver, 10);
         try {
-            wait.until(ExpectedConditions.elementToBeClickable(element));
+            this.wait.until(ExpectedConditions.elementToBeClickable(element));
             js.executeScript("arguments[0].click();", element);
             System.out.println("Successfully JS clicked on the following WebElement: " + "<" + element.toString() + ">");
         } catch (StaleElementReferenceException elementUpdated) {
@@ -97,7 +99,7 @@ public class BasePage {
     public void verifyElementIsDisplayed(WebElement element) {
         this.wait = new WebDriverWait(driver, 10);
         try {
-            wait.until(ExpectedConditions.elementToBeClickable(element));
+            this.wait.until(ExpectedConditions.visibilityOf(element));
             if (!element.isDisplayed()) {
                 System.out.println("Element is not displayed.");
             }
@@ -136,7 +138,7 @@ public class BasePage {
         Actions ob = new Actions(driver);
         this.wait = new WebDriverWait(driver, 10);
         try {
-            //this.wait.until(ExpectedConditions.elementToBeClickable(element)).isEnabled();
+            this.wait.until(ExpectedConditions.elementToBeClickable(element)).isEnabled();
             ob.moveToElement(element).click().build().perform();
             System.out.println("Successfully Action Moved and Clicked on the WebElement, using locator: " + "<" + element.toString() + ">");
         } catch (StaleElementReferenceException elementUpdated) {
@@ -152,6 +154,18 @@ public class BasePage {
         }
     }
 
+    public void clickOnTextFromDropdownList(WebElement list, String textToSearchFor) throws Exception {
+        Wait<WebDriver> tempWait = new WebDriverWait(driver, 30);
+        try {
+            //tempWait.until(ExpectedConditions.elementToBeClickable(list)).click();
+            list.sendKeys(textToSearchFor);
+            list.sendKeys(Keys.ENTER);
+            System.out.println("Successfully sent the following keys: " + textToSearchFor + ", to the following WebElement: " + "<" + list.toString() + ">");
+        } catch (Exception e) {
+            System.out.println("Unable to send the following keys: " + textToSearchFor + ", to the following WebElement: " + "<" + list.toString() + ">");
+            Assert.fail("Unable to select the required text from the dropdown menu, Exception: " + e.getMessage());
+        }
+    }
 
     /**********************************************************************************
      **SEND KEYS METHODS /
@@ -182,8 +196,9 @@ public class BasePage {
      **WAIT METHODS
      **********************************************************************************/
     public boolean WaitUntilWebElementIsVisible(WebElement element) {
+        this.wait = new WebDriverWait(driver, 10);
         try {
-            this.wait.until(ExpectedConditions.visibilityOf(element));
+            wait.until(ExpectedConditions.visibilityOf(element));
             System.out.println("WebElement is visible using locator: " + "<" + element.toString() + ">");
             return true;
         } catch (Exception e) {
@@ -197,6 +212,7 @@ public class BasePage {
      **PAGE METHODS
      **********************************************************************************/
     public boolean isElementClickable(WebElement element) {
+        this.wait = new WebDriverWait(driver, 10);
         try {
             this.wait.until(ExpectedConditions.elementToBeClickable(element));
             System.out.println("WebElement is clickable using locator: " + "<" + element.toString() + ">");
@@ -207,13 +223,13 @@ public class BasePage {
         }
     }
 
-    public BasePage loadUrl(String url) throws Exception {
+    public void loadUrl(String url) throws Exception {
         try {
             driver.get(url);
         } catch (Exception e) {
             System.out.println("Unable to click the current URL, Exception: " + e.getMessage());
         }
-        return new BasePage();
+     //   return new BasePage();
     }
 
 
@@ -254,6 +270,14 @@ public class BasePage {
         }
     }
 
+
+    public String generateRandomUUID() {
+        return UUID.randomUUID().toString();
+    }
+
+    public String generateRandomPassword() {
+        return generateRandomUUID().substring(0, 31);
+    }
 
     /**********************************************************************************
      **EXTENT REPORT
