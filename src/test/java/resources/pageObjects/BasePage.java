@@ -18,11 +18,10 @@ import java.util.UUID;
 
 public class BasePage {
 
-
     public static WebDriver driver;
     private WebDriverWait wait;
     private JavascriptExecutor jsExecutor;
-    private static String screenshotName;
+    public static String screenshotName;
 
 
     public  WebDriver initializeDriver() {
@@ -52,7 +51,7 @@ public class BasePage {
         }
     }
 
-    public void waitUntilElementDisappared(WebElement element) {
+    public void waitUntilElementDisappeared(WebElement element) {
         this.wait = new WebDriverWait(driver, 60);
         try {
             this.wait.until(ExpectedConditions.invisibilityOf(element));
@@ -60,31 +59,10 @@ public class BasePage {
 
         } catch (Exception e) {
             System.out.println("Element did not disappear, Exception: " + e.getMessage());
-            Assert.fail("Element is visible, using locator: " + "<" + element.toString() + ">");
+            Assert.fail("Element did not disappear, using locator: " + "<" + element.toString() + ">");
         }
     }
 
-
-
-    public void waitAndclickElementUsingJS(WebElement element) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        this.wait = new WebDriverWait(driver, 10);
-        try {
-            this.wait.until(ExpectedConditions.elementToBeClickable(element));
-            js.executeScript("arguments[0].click();", element);
-            System.out.println("Successfully JS clicked on the following WebElement: " + "<" + element.toString() + ">");
-        } catch (StaleElementReferenceException elementUpdated) {
-            WebElement staleElement = element;
-            Boolean elementPresent = wait.until(ExpectedConditions.elementToBeClickable(staleElement)).isEnabled();
-            if (elementPresent == true) {
-                js.executeScript("arguments[0].click();", elementPresent);
-                System.out.println("(Stale Exception) Successfully JS clicked on the following WebElement: " + "<" + element.toString() + ">");
-            }
-        } catch (NoSuchElementException e) {
-            System.out.println("Unable to JS click on the following WebElement: " + "<" + element.toString() + ">");
-            Assert.fail("Unable to JS click on the WebElement, Exception: " + e.getMessage());
-        }
-    }
 
     public void moveToElement(WebElement element) {
         Actions actions = new Actions(driver);
@@ -123,36 +101,22 @@ public class BasePage {
 
     }
 
-    public void scrollToElementByWebElementLocator(WebElement element) {
+    public void clickAndDrag(WebElement startPoint, WebElement endPoint) {
+        this.wait = new WebDriverWait(driver, 10);
         try {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
-            //((JavascriptExecutor) driver).executeScript("window.scrollBy(0, -400)");
-            System.out.println("Succesfully scrolled to the WebElement, using locator: " + "<" + element.toString() + ">");
-        } catch (Exception e) {
-            System.out.println("Unable to scroll to the WebElement, using locator: " + "<" + element.toString() + ">");
-            Assert.fail("Unable to scroll to the WebElement, Exception: " + e.getMessage());
+            this.wait.until(ExpectedConditions.visibilityOf(startPoint));
+            Actions actions = new Actions(driver);
+            actions.moveToElement(startPoint).
+                    clickAndHold().dragAndDrop(startPoint, endPoint).build().perform();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Unable to Drag to the WebElement, using locator: " + "<" + endPoint.toString() + ">");
+            Assert.fail("Unable to drag to the WebElement, Exception: " + e.getMessage());
+
         }
     }
 
-    public void actionMoveAndClick(WebElement element) throws Exception {
-        Actions ob = new Actions(driver);
-        this.wait = new WebDriverWait(driver, 10);
-        try {
-            this.wait.until(ExpectedConditions.elementToBeClickable(element)).isEnabled();
-            ob.moveToElement(element).click().build().perform();
-            System.out.println("Successfully Action Moved and Clicked on the WebElement, using locator: " + "<" + element.toString() + ">");
-        } catch (StaleElementReferenceException elementUpdated) {
-            WebElement elementToClick = element;
-            Boolean elementPresent = wait.until(ExpectedConditions.elementToBeClickable(elementToClick)).isEnabled();
-            if (elementPresent == true) {
-                ob.moveToElement(elementToClick).click().build().perform();
-                System.out.println("(Stale Exception) - Successfully Action Moved and Clicked on the WebElement, using locator: " + "<" + element.toString() + ">");
-            }
-        } catch (Exception e) {
-            System.out.println("Unable to Action Move and Click on the WebElement, using locator: " + "<" + element.toString() + ">");
-            Assert.fail("Unable to Action Move and Click on the WebElement, Exception: " + e.getMessage());
-        }
-    }
 
     public void clickOnTextFromDropdownList(WebElement list, String textToSearchFor) throws Exception {
         Wait<WebDriver> tempWait = new WebDriverWait(driver, 30);
@@ -181,6 +145,7 @@ public class BasePage {
             Assert.fail("Unable to send keys to WebElement, Exception: " + e.getMessage());
         }
     }
+
 
     public void sendLeftArrowKey() {
         Actions actions = new Actions(driver);
@@ -211,17 +176,6 @@ public class BasePage {
     /**********************************************************************************
      **PAGE METHODS
      **********************************************************************************/
-    public boolean isElementClickable(WebElement element) {
-        this.wait = new WebDriverWait(driver, 10);
-        try {
-            this.wait.until(ExpectedConditions.elementToBeClickable(element));
-            System.out.println("WebElement is clickable using locator: " + "<" + element.toString() + ">");
-            return true;
-        } catch (Exception e) {
-            System.out.println("WebElement is NOT clickable using locator: " + "<" + element.toString() + ">");
-            return false;
-        }
-    }
 
     public void loadUrl(String url) throws Exception {
         try {
@@ -229,20 +183,9 @@ public class BasePage {
         } catch (Exception e) {
             System.out.println("Unable to click the current URL, Exception: " + e.getMessage());
         }
-     //   return new BasePage();
     }
 
 
-    public String getCurrentURL() {
-        try {
-            String url = driver.getCurrentUrl();
-            System.out.println("Found(Got) the following URL: " + url);
-            return url;
-        } catch (Exception e) {
-            System.out.println("Unable to locate (Get) the current URL, Exception: " + e.getMessage());
-            return e.getMessage();
-        }
-    }
 
     public void verifyFileExists(String filePath) {
         File file = new File(filePath);
@@ -293,42 +236,8 @@ public class BasePage {
         File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         screenshotName = returnDateStamp(".jpg");
         FileUtils.copyFile(srcFile, new File(System.getProperty("user.dir") + "\\output\\imgs\\" + screenshotName));
-        Reporter.addStepLog("Taking a screenshot!");
-        Reporter.addStepLog("<br>");
-        Reporter.addStepLog("<a target=\"_blank\", href=" + returnScreenshotName() + "><img src=" + returnScreenshotName() + " height=200 width=300></img></a>");
+
     }
-
-    public static String returnScreenshotName() {
-        return (System.getProperty("user.dir") + "\\output\\imgs\\" + screenshotName).toString();
-    }
-
-    private static void copyFileUsingStream(File source, File dest) throws IOException {
-        InputStream is = null;
-        OutputStream os = null;
-
-        try {
-            is = new FileInputStream(source);
-            os = new FileOutputStream(dest);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = is.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
-            }
-
-        } finally {
-            is.close();
-            os.close();
-        }
-    }
-
-    public static void copyLatestExtentReport() throws IOException {
-        Date d = new Date();
-        String date = d.toString().replace(":", "_").replace(" ", "_");
-        File source = new File(System.getProperty("user.dir") + "\\output\\report.html");
-        File dest = new File(System.getProperty("user.dir") + "\\output\\" + date.toString() + ".html");
-        copyFileUsingStream(source, dest);
-    }
-
 
 }
 

@@ -44,7 +44,7 @@ public class SummerDressesPage extends BasePage{
 
     public void validateSearchResultUpdated(){
         verifyElementIsDisplayed(imgLoading);
-        waitUntilElementDisappared(imgLoading);
+        waitUntilElementDisappeared(imgLoading);
     }
 
     public void validateResultPricesInRange(String prcMin , String prcMax) {

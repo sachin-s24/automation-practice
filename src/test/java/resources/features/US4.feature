@@ -1,4 +1,4 @@
-Feature: Use can Create New Personal Account
+Feature: Use Can Create New Personal Account
 
 
   @Start

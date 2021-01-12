@@ -11,7 +11,8 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = {"src/test/java/resources/features/"} ,
         glue = {"resources.stepDefinitions"} ,
-        monochrome = true )
+        monochrome = true ,
+        plugin = { "pretty"})
 
 public class MainRunner extends AbstractTestNGCucumberTests {
 }

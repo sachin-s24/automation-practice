@@ -6,5 +6,6 @@ public class Constant {
     public final static String urlSummerDressesPage = "http://automationpractice.com/index.php?id_category=11&controller=category";
     public final static String urlSignInPage = "http://automationpractice.com/index.php?controller=authentication&back=my-account";
     public final static String emailDomain = "@test123.com" ;
+    public final static String urlOurStore = "http://automationpractice.com/index.php?controller=stores";
 }
 

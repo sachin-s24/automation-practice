@@ -37,12 +37,12 @@ public class HomePage extends BasePage {
 
     public void addItemToCart() throws Throwable {
         moveToElement(firstProductImage);
-        waitAndclickElementUsingJS(btnAddToCart);
-        waitAndclickElementUsingJS(btnContinue);
+        waitAndClickElement(btnAddToCart);
+        waitAndClickElement(btnContinue);
     }
 
     public void navigateToCartPage() throws Throwable {
-        waitAndclickElementUsingJS(btnCartWindow);
+        waitAndClickElement(btnCartWindow);
     }
 
     public void validateItemInCartDropdown() throws Throwable{
