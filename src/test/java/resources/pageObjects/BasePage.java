@@ -1,6 +1,6 @@
 package resources.pageObjects;
 
-import com.vimalselvam.cucumber.listener.Reporter;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;

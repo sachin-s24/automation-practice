@@ -5,6 +5,8 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import resources.pageObjects.RegistrationPage;
 
+import static resources.utils.Constant.urlOurStore;
+
 public class RegistrationPageSteps {
 
     RegistrationPage registrationPage = new RegistrationPage();
@@ -17,7 +19,7 @@ public class RegistrationPageSteps {
     @Given("^I am on the registration page$")
     public void i_am_on_the_registration_page() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-
+        registrationPage.validateOnRegistrationPage();
     }
 
     @When("^I input invalid data into a field$")
