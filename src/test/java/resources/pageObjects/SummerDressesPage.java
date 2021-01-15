@@ -1,10 +1,12 @@
 package resources.pageObjects;
 
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import java.util.List;
 
 public class SummerDressesPage extends BasePage{
 
@@ -24,7 +26,10 @@ public class SummerDressesPage extends BasePage{
     public @FindBy(xpath = "//body/div[@id='page']/div[@class='columns-container']/div[@id='columns']/div[@class='row']/div[@id='center_column']/ul[@class='product_list grid row']/p[1]")
     WebElement imgLoading;
 
-    public By prodPrices = By.xpath("//div[@class='right-block']/div[1]/span[1]");
+    public @FindAll(@FindBy(xpath = "//div[@class='right-block']/div[1]/span[1]"))
+    List<WebElement> prodPrices;
+
+   // public By prodPrices = By.xpath("//div[@class='right-block']/div[1]/span[1]");
 
     public void validateSummerItemDisplayed() {
         verifyElementIsDisplayed(imgSummerDress);
@@ -50,6 +55,6 @@ public class SummerDressesPage extends BasePage{
     public void validateResultPricesInRange(String prcMin , String prcMax) {
         int priceMinimum = Integer.valueOf(prcMin);
         int priceMaximum = Integer.valueOf(prcMax);
-        verifyExpectedPriceRangeOfItemsOnPage(prodPrices , priceMinimum , priceMaximum) ;
+        verifyExpectedPriceRangeOfItemsOnPage(prodPrices , priceMinimum, priceMaximum);
     }
 }

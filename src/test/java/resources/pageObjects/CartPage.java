@@ -12,6 +12,8 @@ public class CartPage extends BasePage{
         PageFactory.initElements(driver, this);
     }
 
+
+
     public @FindBy (id = "product_1_1_0_0")
     WebElement cartItem ;
 

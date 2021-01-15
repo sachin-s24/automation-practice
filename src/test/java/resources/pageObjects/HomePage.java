@@ -10,6 +10,7 @@ public class HomePage extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+
     public @FindBy(xpath = "//body/div[@id='page']/div[2]/div[1]/div[2]/div[1]/div[1]/ul[1]/li[1]/div[1]/div[1]/div[1]/a[1]/img[1]")
     WebElement firstProductImage;
 
