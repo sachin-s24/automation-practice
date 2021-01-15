@@ -5,8 +5,6 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import resources.pageObjects.RegistrationPage;
 
-import static resources.utils.Constant.urlOurStore;
-
 public class RegistrationPageSteps {
 
     RegistrationPage registrationPage = new RegistrationPage();

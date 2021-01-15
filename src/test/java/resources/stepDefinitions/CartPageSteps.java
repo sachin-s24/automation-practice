@@ -7,7 +7,7 @@ import cucumber.api.java.en.When;
 import resources.pageObjects.CartPage;
 import static resources.utils.Constant.*;
 
-public class CartPageSteps {
+public class CartPageSteps  {
     CartPage cartPage = new CartPage();
 
     @Given("^I am on the cart page$")

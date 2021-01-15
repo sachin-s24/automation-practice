@@ -11,7 +11,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +23,14 @@ public class BasePage {
     private WebDriverWait wait;
     private JavascriptExecutor jsExecutor;
     public static String screenshotName;
+
+    public static CartPage cartPage;
+    public static HomePage homePage;
+    public static MyAccountPage myAccountPage;
+    public static OurStoresPage ourStoresPage;
+    public static RegistrationPage registrationPage;
+    public static SignInPage signInPage;
+    public static SummerDressesPage summerDressesPage;
 
 
     public  WebDriver initializeDriver() {
@@ -195,9 +204,26 @@ public class BasePage {
         Assert.assertTrue(file.exists() && !file.isDirectory());
     }
 
-    public void verifyExpectedPriceRangeOfItemsOnPage(By element,  int minimumPrice , int maximumPrice) {
+/*    public void verifyExpectedPriceRangeOfItemsOnPage(By element,  int minimumPrice , int maximumPrice) {
 
         List<WebElement> elements = driver.findElements(element);
+
+        for (int i = 0; i < elements.size(); i++) {
+            String stringPrice = elements.get(i).getText().substring(1, 3);
+            int integerPrice = Integer.parseInt(stringPrice);
+            if (integerPrice <= maximumPrice) {
+                if (integerPrice >= minimumPrice) {
+                    Assert.assertTrue("Item price '" + stringPrice + "'is within the specified range of '" + minimumPrice + "' and '" + maximumPrice + "'", true);
+                }
+            } else {
+                System.out.println("Item Prices were not updated correctly.");
+                Assert.fail();
+            }
+        }
+    }*/
+
+    public void verifyExpectedPriceRangeOfItemsOnPage(List<WebElement> elements,  int minimumPrice , int maximumPrice) {
+
 
         for (int i = 0; i < elements.size(); i++) {
             String stringPrice = elements.get(i).getText().substring(1, 3);
