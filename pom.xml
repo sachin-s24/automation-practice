@@ -23,15 +23,15 @@
                         <source>1.8</source>
                         <target>1.8</target>
                         <fork>true</fork>
-                        <!--<executable>C:\Program Files\Java\jdk1.8.0_121\bin\javac.exe</executable>-->
-                        <executable>${env.JAVA_HOME}\bin\javac.exe</executable>
+                        <executable>C:\Program Files\Java\jdk1.8.0_191\bin\javac.exe</executable>
+                        <!--<executable>${env.JAVA_HOME}\bin\javac.exe</executable>-->
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                     <configuration>
-                        <mainClass>Search.utilities.SendEmailFile</mainClass>
+                        <mainClass>BuyAGiftFramework.utilities.SendEmailFile</mainClass>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -42,7 +42,7 @@
                         <suiteXmlFiles>
                             <suiteXmlFile>testng.xml</suiteXmlFile>
                         </suiteXmlFiles>
-                        <testFailureIgnore>false</testFailureIgnore>
+                        <testFailureIgnore>true</testFailureIgnore>
                     </configuration>
                 </plugin>
             </plugins>
@@ -119,11 +119,21 @@
             <artifactId>cucumber-testng</artifactId>
             <version>1.2.6</version>
         </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-jvm-deps</artifactId>
+            <version>1.0.5</version>
+        </dependency>
         <!-- Extent Reports -->
         <dependency>
             <groupId>com.vimalselvam</groupId>
             <artifactId>cucumber-extentsreport</artifactId>
-            <version>3.1.1</version>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.aventstack</groupId>
@@ -140,7 +150,7 @@
         <dependency>
             <groupId>net.masterthought</groupId>
             <artifactId>cucumber-reporting</artifactId>
-            <version>5.4.0</version>
+            <version>3.6.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
